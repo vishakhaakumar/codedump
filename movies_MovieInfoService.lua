@@ -6,12 +6,23 @@
 --
 
 
-require 'Thrift'
-require 'movies_ttypes'
+local movies_ttype = require 'movies_ttypes'
+local Thrift = require 'Thrift'
+local TType = Thrift.TType
+local TMessageType = Thrift.TMessageType
+local __TObject = Thrift.__TObject
+local TApplicationException = Thrift.TApplicationException
+local __TClient = Thrift.__TClient
+local __TProcessor = Thrift.__TProcessor
+local ttype = Thrift.ttype
+local ttable_size = Thrift.ttable_size
+local TException = Thrift.TException
 
-MovieInfoServiceClient = __TObject.new(__TClient, {
+
+local MovieInfoServiceClient = __TObject.new(__TClient, {
   __type = 'MovieInfoServiceClient'
 })
+
 
 function MovieInfoServiceClient:GetMoviesByIds(movie_ids)
   self:send_GetMoviesByIds(movie_ids)
@@ -146,12 +157,12 @@ function MovieInfoServiceClient:recv_GetMovieLink(movie_name, user_id)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-MovieInfoServiceIface = __TObject:new{
+local MovieInfoServiceIface = __TObject:new{
   __type = 'MovieInfoServiceIface'
 }
 
 
-MovieInfoServiceProcessor = __TObject.new(__TProcessor
+local MovieInfoServiceProcessor = __TObject.new(__TProcessor
 , {
  __type = 'MovieInfoServiceProcessor'
 })
@@ -159,7 +170,7 @@ MovieInfoServiceProcessor = __TObject.new(__TProcessor
 function MovieInfoServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
-  if not self[func_name] or ttype(self[func_name]) ~= 'function' then
+  if not self[func_name] or ttype(self[func_name]) ~= 'function' then		
     if oprot ~= nil then
       iprot:skip(TType.STRUCT)
       iprot:readMessageEnd()
@@ -240,7 +251,6 @@ function MovieInfoServiceProcessor:process_UploadMovies(seqid, iprot, oprot, ser
   oprot.trans:flush()
   return status, res
 end
-
 function MovieInfoServiceProcessor:process_GetMovieLink(seqid, iprot, oprot, server_ctx)
   local args = GetMovieLink_args:new{}
   local reply_type = TMessageType.REPLY
@@ -262,13 +272,10 @@ function MovieInfoServiceProcessor:process_GetMovieLink(seqid, iprot, oprot, ser
   oprot.trans:flush()
   return status, res
 end
-
 -- HELPER FUNCTIONS AND STRUCTURES
-
-GetMoviesByIds_args = __TObject:new{
+local GetMoviesByIds_args = __TObject:new{
   movie_ids
 }
-
 function GetMoviesByIds_args:read(iprot)
   iprot:readStructBegin()
   while true do
@@ -294,7 +301,6 @@ function GetMoviesByIds_args:read(iprot)
   end
   iprot:readStructEnd()
 end
-
 function GetMoviesByIds_args:write(oprot)
   oprot:writeStructBegin('GetMoviesByIds_args')
   if self.movie_ids ~= nil then
@@ -310,7 +316,7 @@ function GetMoviesByIds_args:write(oprot)
   oprot:writeStructEnd()
 end
 
-GetMoviesByIds_result = __TObject:new{
+ GetMoviesByIds_result = __TObject:new{
   success
 }
 
@@ -355,11 +361,10 @@ function GetMoviesByIds_result:write(oprot)
   oprot:writeStructEnd()
 end
 
-GetMoviesByTitle_args = __TObject:new{
+local GetMoviesByTitle_args = __TObject:new{
   movie_string,
   user_id
 }
-
 function GetMoviesByTitle_args:read(iprot)
   iprot:readStructBegin()
   while true do
@@ -402,7 +407,7 @@ function GetMoviesByTitle_args:write(oprot)
   oprot:writeStructEnd()
 end
 
-GetMoviesByTitle_result = __TObject:new{
+ GetMoviesByTitle_result = __TObject:new{
   success,
   se
 }
@@ -460,12 +465,11 @@ function GetMoviesByTitle_result:write(oprot)
   oprot:writeStructEnd()
 end
 
-UploadMovies_args = __TObject:new{
+local UploadMovies_args = __TObject:new{
   movie_ids,
   movie_titles,
   movie_links
 }
-
 function UploadMovies_args:read(iprot)
   iprot:readStructBegin()
   while true do
@@ -548,12 +552,10 @@ function UploadMovies_args:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
-
 UploadMovies_result = __TObject:new{
   success,
   se
 }
-
 function UploadMovies_result:read(iprot)
   iprot:readStructBegin()
   while true do
@@ -580,7 +582,6 @@ function UploadMovies_result:read(iprot)
   end
   iprot:readStructEnd()
 end
-
 function UploadMovies_result:write(oprot)
   oprot:writeStructBegin('UploadMovies_result')
   if self.success ~= nil then
@@ -596,12 +597,10 @@ function UploadMovies_result:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
-
-GetMovieLink_args = __TObject:new{
+local GetMovieLink_args = __TObject:new{
   movie_name,
   user_id
 }
-
 function GetMovieLink_args:read(iprot)
   iprot:readStructBegin()
   while true do
@@ -627,7 +626,6 @@ function GetMovieLink_args:read(iprot)
   end
   iprot:readStructEnd()
 end
-
 function GetMovieLink_args:write(oprot)
   oprot:writeStructBegin('GetMovieLink_args')
   if self.movie_name ~= nil then
@@ -648,7 +646,6 @@ GetMovieLink_result = __TObject:new{
   success,
   se
 }
-
 function GetMovieLink_result:read(iprot)
   iprot:readStructBegin()
   while true do
@@ -691,3 +688,5 @@ function GetMovieLink_result:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+return MovieInfoServiceClient
